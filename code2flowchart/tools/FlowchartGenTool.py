@@ -1,8 +1,7 @@
-import os
 from langchain.tools import BaseTool
-from utils.mermaid import generate_flowchart
+from code2flowchart.utils.mermaid import generate_flowchart
 from langchain.llms import OpenAI
-from templates.flowchart_prompt import flowchart_template
+from code2flowchart.templates.flowchart_prompt import flowchart_template
 
 
 class FlowchartGenTool(BaseTool):

@@ -1,6 +1,5 @@
 import asyncio
-import os
-from utils.asyncllm.AbstractAsyncLLM import AbstractAsyncLLM
+from code2flowchart.utils.asyncllm.AbstractAsyncLLM import AbstractAsyncLLM
 
 
 class AsyncLLM(AbstractAsyncLLM):
