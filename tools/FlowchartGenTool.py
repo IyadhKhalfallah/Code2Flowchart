@@ -2,20 +2,22 @@ import os
 from langchain.tools import BaseTool
 from utils.mermaid import generate_flowchart
 from langchain.llms import OpenAI
+from templates.flowchart_prompt import flowchart_template
 
 
 class FlowchartGenTool(BaseTool):
     name = "Generate flowchart"
     description = (
-        "A flowchart generates, which acts like a code analyst to explain a code then generate a flowchart out of it"
-        "Input should be a valid python code, found between CONTEXT_START and CONTEXT_END. "
+        "A flowchart generator, which generates a flowchart out of some text explaining a code process."
+        "Input should be a valid a detailed text explaining a process."
         ""
     )
     llm = OpenAI(temperature=0.9)
 
     def _run(self, query: str) -> str:
         """Use the tool."""
-        return generate_flowchart(query)
+        code = self.llm(flowchart_template(query))
+        return generate_flowchart(code.replace('`', ''))
 
     async def _arun(self, query: str) -> str:
         """Use the tool asynchronously."""

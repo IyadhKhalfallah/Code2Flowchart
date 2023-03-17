@@ -1,21 +1,23 @@
 # Import things that are needed generically
 import os
+
+from langchain.memory import ConversationBufferMemory
 from langchain.llms import OpenAI
-from utils.mermaid import generate_flowchart
+from langchain.agents import initialize_agent
+
 from templates.prompt import flowchart_template
+from constants import OPENAI_API_KEY, TOOLS
+
+os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 
 
 llm = OpenAI(temperature=0)
 
-tools = [
-    Tool(
-        name="Generate flowchart",
-        func=lambda n: generate_flowchart(n),
-        description="useful for when you need to explain the code and generate a flowchart from it"
-    )
-]
+tools = [tool['tool'] for tool in TOOLS if tool['include'] is True]
 
-agent = initialize_agent(tools, llm, agent="conversational-react-description", verbose=True)
+memory = ConversationBufferMemory(memory_key="chat_history", output_key='output')
+
+agent = initialize_agent(tools, llm, agent="conversational-react-description", memory=memory, verbose=True)
 
 prompt = flowchart_template(
     """
@@ -49,8 +51,6 @@ prompt = flowchart_template(
         return dict_code
     """)
 
-res = llm(prompt)
-generate_flowchart(res.replace('```', ''))
-#
-#
-# agent.run(prompt)
+agent.run(prompt)
+agent.run("Generate a correct mermaid.js flowchart syntax from the explanation you provided")
+
