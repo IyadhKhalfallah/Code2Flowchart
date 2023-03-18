@@ -1,4 +1,3 @@
-import os
 from langchain.tools import BaseTool
 from langchain.llms import OpenAI
 
@@ -18,4 +17,4 @@ class CodeExplanationTool(BaseTool):
 
     async def _arun(self, query: str) -> str:
         """Use the tool asynchronously."""
-        raise NotImplementedError("BingSearchRun does not support async")
+        raise NotImplementedError("CodeExplanationTool does not support async")

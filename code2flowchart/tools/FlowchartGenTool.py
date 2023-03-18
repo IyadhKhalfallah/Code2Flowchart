@@ -1,6 +1,7 @@
 from langchain.tools import BaseTool
-from code2flowchart.utils.mermaid import generate_flowchart
 from langchain.llms import OpenAI
+
+from code2flowchart.utils.flowchart.mermaid import generate_flowchart
 from code2flowchart.templates.flowchart_prompt import flowchart_template
 
 
@@ -20,4 +21,4 @@ class FlowchartGenTool(BaseTool):
 
     async def _arun(self, query: str) -> str:
         """Use the tool asynchronously."""
-        raise NotImplementedError("BingSearchRun does not support async")
+        raise NotImplementedError("CodeExplanationTool does not support async")

@@ -1,7 +1,4 @@
-import asyncio
-
 from abc import ABC, abstractmethod
-from langchain.llms import OpenAI
 
 
 class AbstractAsyncLLM(ABC):
@@ -13,6 +10,4 @@ class AbstractAsyncLLM(ABC):
         pass
 
     async def generate_concurrently(self):
-        llm = OpenAI(temperature=self.temperature)
-        tasks = [self.async_generate(llm) for _ in range(10)]
-        await asyncio.gather(*tasks)
+        pass

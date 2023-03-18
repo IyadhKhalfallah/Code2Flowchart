@@ -1,55 +1,16 @@
-import os
-import streamlit as st
-
-from langchain.memory import ConversationBufferMemory
-from langchain.llms import OpenAI
-from langchain.agents import initialize_agent
-
-from constants import TOOLS
-from utils.mermaid import generate_flowchart
-from templates.prompt import flowchart_template
+import asyncio
+from code2flowchart.utils.asyncllm.AsyncFlowGenerator import AsyncFlowGenerator
 
 
-llm = OpenAI(temperature=0)
+def run():
+    async_llm = AsyncFlowGenerator(0)
+    loop = asyncio.get_event_loop()
+    tasks = [
+        loop.create_task(async_llm.generate_concurrently('IyadhKhalfallah', 'aws-lambda_terraform')),
+    ]
+    loop.run_until_complete(asyncio.wait(tasks))
+    loop.close()
 
 
-def generate_output(code):
-    llm = OpenAI(temperature=0.9)
-
-    prompt = flowchart_template(
-        f"""
-        {code}
-        """)
-    res = llm(prompt)
-    return generate_flowchart(res.replace('```', ''))
-
-
-def run_agent(code):
-    tools = [tool['tool']() for tool in TOOLS if tool['include'] is True]
-
-    memory = ConversationBufferMemory(memory_key="chat_history", output_key='output')
-
-    agent = initialize_agent(tools, llm, agent="conversational-react-description", memory=memory, verbose=True)
-
-    prompt = flowchart_template(
-            f"""
-            {code}
-            """)
-
-    agent.run(prompt)
-    agent.run("Generate a correct mermaid.js flowchart syntax from the explanation you provided")
-
-
-def main():
-    st.title("Flowchart generator from code")
-
-    # Add a text input box for the Python code
-    code = st.text_area("Enter your Python code here:", max_chars=5000)
-    # Add a submit button
-    if st.button("Run Code"):
-        # Run the Python code and display the output
-        output = generate_output(code)
-        st.image(output, caption="Generated Image", use_column_width=True)
-
-
-main()
+if __name__ == '__main__':
+    run()

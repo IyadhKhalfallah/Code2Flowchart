@@ -4,7 +4,7 @@ from PIL import Image
 import logging
 
 
-def generate_flowchart(code):
+def generate_flowchart(file_name, code):
     graph = f"""
     {code}
     """
@@ -16,7 +16,7 @@ def generate_flowchart(code):
 
     try:
         img = Image.open(io.BytesIO(requests.get('https://mermaid.ink/img/' + base64_string).content))
-        img.save("flowchart.png")
+        img.save(f"{file_name}.png")
         return img
     except:
         logging.error(f"Failed to download flowchart image")
